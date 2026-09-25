@@ -195,7 +195,11 @@ export default function HomePage() {
             <div className="rounded-card border border-neutral-border bg-surface p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#7893FF] mb-2">
                 <Code2 size={18} />
-                <h3 className="text-sm font-bold text-ink">Structured Data</h3>
+                <h3 className="text-sm font-bold text-ink">
+                  <Link href="/tools/structured-data/" className="hover:text-brand transition-colors">
+                    Structured Data
+                  </Link>
+                </h3>
               </div>
               <ul className="space-y-2 text-xs pt-2 border-t border-neutral-border">
                 <li>
@@ -215,7 +219,11 @@ export default function HomePage() {
             <div className="rounded-card border border-neutral-border bg-surface p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#7893FF] mb-2">
                 <Network size={18} />
-                <h3 className="text-sm font-bold text-ink">Technical SEO</h3>
+                <h3 className="text-sm font-bold text-ink">
+                  <Link href="/tools/technical-seo/" className="hover:text-brand transition-colors">
+                    Technical SEO
+                  </Link>
+                </h3>
               </div>
               <ul className="space-y-2 text-xs pt-2 border-t border-neutral-border">
                 <li>
@@ -241,11 +249,15 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* Cluster 3: Metadata & SERP */}
+            {/* Cluster 3: Metadata & Marketing */}
             <div className="rounded-card border border-neutral-border bg-surface p-6 shadow-sm">
               <div className="flex items-center gap-2 text-[#38BDF8] mb-2">
                 <Share2 size={18} />
-                <h3 className="text-sm font-bold text-ink">Metadata &amp; Social</h3>
+                <h3 className="text-sm font-bold text-ink">
+                  <Link href="/tools/marketing/" className="hover:text-brand transition-colors">
+                    Marketing &amp; Social
+                  </Link>
+                </h3>
               </div>
               <ul className="space-y-2 text-xs pt-2 border-t border-neutral-border">
                 <li>

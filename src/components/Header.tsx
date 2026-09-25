@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, X, ChevronRight } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
+import { getCategoryByToolSlug } from "@/config/categories";
+
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -34,12 +36,27 @@ export function Header() {
 
   const navLinks = [
     { name: "Tools", href: "/tools/" },
-    { name: "Technical SEO", href: "/tools/?cat=Technical+SEO" },
-    { name: "Structured Data", href: "/tools/?cat=Structured+Data" },
-    { name: "Marketing", href: "/tools/?cat=Marketing" },
+    { name: "Technical SEO", href: "/tools/technical-seo/" },
+    { name: "Structured Data", href: "/tools/structured-data/" },
+    { name: "Marketing", href: "/tools/marketing/" },
     { name: "Blog", href: "/blog/" },
     { name: "About", href: "/about/" },
   ];
+
+  const cleanPathname = pathname ? (pathname.endsWith("/") ? pathname : `${pathname}/`) : "/";
+  const toolSlug = cleanPathname.replace(/^\/|\/$/g, "");
+  const categoryForCurrentTool = getCategoryByToolSlug(toolSlug)?.slug;
+
+  const isLinkActive = (href: string) => {
+    if (href === "/tools/") {
+      return cleanPathname === "/tools/";
+    }
+    if (href.startsWith("/tools/")) {
+      const categorySlug = href.replace(/^\/tools\//, "").replace(/\/$/, "");
+      return cleanPathname === href || categoryForCurrentTool === categorySlug;
+    }
+    return cleanPathname === href;
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-[#22344C] bg-[rgba(7,17,31,0.96)] backdrop-blur-md transition-colors">
@@ -64,7 +81,7 @@ export function Header() {
           className="hidden items-center gap-7 text-[14px] font-medium text-[#9EADBF] md:flex"
         >
           {navLinks.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = isLinkActive(item.href);
             return (
               <Link
                 key={item.name}
@@ -72,6 +89,7 @@ export function Header() {
                 className={`transition-colors hover:text-[#F5F8FC] ${
                   isActive ? "text-[#7893FF] font-semibold" : ""
                 }`}
+                aria-current={isActive ? "page" : undefined}
               >
                 {item.name}
               </Link>
@@ -119,51 +137,47 @@ export function Header() {
             <div className="space-y-1">
               <Link
                 href="/tools/"
-                className="flex items-center justify-between py-2.5 text-sm font-semibold text-[#F5F8FC] hover:text-[#5B7CFF]"
+                className={`flex items-center justify-between py-2.5 text-sm font-semibold transition-colors ${
+                  cleanPathname === "/tools/" ? "text-[#7893FF]" : "text-[#F5F8FC] hover:text-[#5B7CFF]"
+                }`}
               >
                 <span>All Tools Directory</span>
                 <ChevronRight size={16} className="text-[#7F8DA3]" />
               </Link>
               <Link
-                href="/tools/?cat=Technical+SEO"
-                className="flex items-center justify-between py-2.5 text-sm font-medium text-[#B5C1D1] hover:text-[#F5F8FC]"
+                href="/tools/technical-seo/"
+                className={`flex items-center justify-between py-2.5 text-sm font-medium transition-colors ${
+                  isLinkActive("/tools/technical-seo/") ? "text-[#7893FF] font-semibold" : "text-[#B5C1D1] hover:text-[#F5F8FC]"
+                }`}
               >
                 <span>Technical SEO</span>
                 <ChevronRight size={16} className="text-[#7F8DA3]" />
               </Link>
               <Link
-                href="/tools/?cat=Structured+Data"
-                className="flex items-center justify-between py-2.5 text-sm font-medium text-[#B5C1D1] hover:text-[#F5F8FC]"
+                href="/tools/structured-data/"
+                className={`flex items-center justify-between py-2.5 text-sm font-medium transition-colors ${
+                  isLinkActive("/tools/structured-data/") ? "text-[#7893FF] font-semibold" : "text-[#B5C1D1] hover:text-[#F5F8FC]"
+                }`}
               >
                 <span>Structured Data</span>
                 <ChevronRight size={16} className="text-[#7F8DA3]" />
               </Link>
               <Link
-                href="/tools/?cat=Metadata"
-                className="flex items-center justify-between py-2.5 text-sm font-medium text-[#B5C1D1] hover:text-[#F5F8FC]"
-              >
-                <span>Metadata</span>
-                <ChevronRight size={16} className="text-[#7F8DA3]" />
-              </Link>
-              <Link
-                href="/tools/?cat=Ecommerce"
-                className="flex items-center justify-between py-2.5 text-sm font-medium text-[#B5C1D1] hover:text-[#F5F8FC]"
-              >
-                <span>Ecommerce</span>
-                <ChevronRight size={16} className="text-[#7F8DA3]" />
-              </Link>
-              <Link
-                href="/tools/?cat=Marketing"
-                className="flex items-center justify-between py-2.5 text-sm font-medium text-[#B5C1D1] hover:text-[#F5F8FC]"
+                href="/tools/marketing/"
+                className={`flex items-center justify-between py-2.5 text-sm font-medium transition-colors ${
+                  isLinkActive("/tools/marketing/") ? "text-[#7893FF] font-semibold" : "text-[#B5C1D1] hover:text-[#F5F8FC]"
+                }`}
               >
                 <span>Marketing</span>
                 <ChevronRight size={16} className="text-[#7F8DA3]" />
               </Link>
               <Link
-                href="/keyword-density-checker/"
-                className="flex items-center justify-between py-2.5 text-sm font-medium text-[#B5C1D1] hover:text-[#F5F8FC]"
+                href="/blog/"
+                className={`flex items-center justify-between py-2.5 text-sm font-medium transition-colors ${
+                  cleanPathname === "/blog/" ? "text-[#7893FF] font-semibold" : "text-[#B5C1D1] hover:text-[#F5F8FC]"
+                }`}
               >
-                <span>Content Analysis</span>
+                <span>Blog</span>
                 <ChevronRight size={16} className="text-[#7F8DA3]" />
               </Link>
             </div>

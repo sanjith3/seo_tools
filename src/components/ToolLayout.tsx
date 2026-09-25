@@ -8,6 +8,8 @@ import { siteConfig } from "@/config/site";
 import { ShieldCheck, Lock, Check } from "lucide-react";
 import { AdSlot } from "@/components/ads/AdSlot";
 
+import { getCategoryByToolSlug } from "@/config/categories";
+
 interface ToolLayoutProps {
   slug: string;
   toolNode?: React.ReactNode;
@@ -17,10 +19,12 @@ interface ToolLayoutProps {
 
 export function ToolLayout({ slug, toolNode, children, sidebarSummary }: ToolLayoutProps) {
   const tool = getToolBySlug(slug);
+  const categoryDef = getCategoryByToolSlug(slug);
 
   const breadcrumbItems = [
     { name: "Home", url: `${siteConfig.url}/` },
     { name: "All Tools", url: `${siteConfig.url}/tools/` },
+    ...(categoryDef ? [{ name: categoryDef.name, url: `${siteConfig.url}/tools/${categoryDef.slug}/` }] : []),
     { name: tool?.name || "Utility", url: `${siteConfig.url}/${slug}/` }
   ];
 
@@ -36,7 +40,9 @@ export function ToolLayout({ slug, toolNode, children, sidebarSummary }: ToolLay
             hideJsonLd
             crumbs={[
               { name: "All Tools", href: "/tools/" },
-              { name: tool?.category || "Tools", href: `/tools/?cat=${encodeURIComponent(tool?.category || "")}` },
+              ...(categoryDef
+                ? [{ name: categoryDef.name, href: `/tools/${categoryDef.slug}/` }]
+                : [{ name: tool?.category || "Tools", href: "/tools/" }]),
               { name: tool?.name || "Utility" }
             ]}
           />
