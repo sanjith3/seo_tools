@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/*?*"] // Block raw query parameter variations from creating duplicate indexation
+      disallow: "/api/"
     },
     sitemap: `${siteConfig.url}/sitemap.xml`
   };

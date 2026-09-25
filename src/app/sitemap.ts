@@ -3,8 +3,6 @@ import { siteConfig } from "@/config/site";
 import { getAllPostSlugs } from "@/lib/wordpress";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const lastModified = new Date("2026-09-24");
-
   const staticRoutes: Array<{
     path: string;
     changeFrequency: "daily" | "weekly" | "monthly";
@@ -41,17 +39,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: `${siteConfig.url}${route.path}`,
-    lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority
   }));
 
-  // Append published WordPress articles dynamically
+  // Append published WordPress articles dynamically with authentic modified dates
   try {
     const wpPosts = await getAllPostSlugs();
     for (const post of wpPosts) {
       if (!post.slug) continue;
-      let postModifiedDate = lastModified;
+
+      let postModifiedDate: Date | undefined;
       if (post.modified) {
         const parsed = new Date(post.modified);
         if (!isNaN(parsed.getTime())) {
@@ -61,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       entries.push({
         url: `${siteConfig.url}/blog/${post.slug}/`,
-        lastModified: postModifiedDate,
+        ...(postModifiedDate ? { lastModified: postModifiedDate } : {}),
         changeFrequency: "weekly",
         priority: 0.75
       });
